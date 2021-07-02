@@ -1,5 +1,5 @@
 //
-//  WeatherViewController.swift
+//  CitiesViewController.swift
 //  Weather-App
 //
 //  Created by Максим Фомичев on 01.07.2021.
@@ -7,25 +7,33 @@
 
 import UIKit
 
-class WeatherViewController: BaseTableViewController {
+class CitiesViewController: BaseTableViewController {
 
     // MARK: - Private
     private enum Spec {
-        static let newItemAlertTitle = "Add city"
-        static let newItemAlertMessage = "Input your city here"
-        static let newItemAlertOkButtonTitle = "Save"
-        static let newItemAlertCancelButtonTitle = "Cancel"
-        static let newItemAlertTextFieldPlaceholder = "ex. Moscow"
+        enum NewItemAlert {
+            static let title = "Add city"
+            static let message = "Input your city here"
+            enum CancelButton {
+                static let title = "Cancel"
+            }
+            enum OkButton {
+                static let title = "Save"
+            }
+            enum TextField {
+                static let placeholder = "ex. Moscow"
+            }
+        }
     }
 
-    var items: [WeatherListItem] = []
+    var items: [CityItem] = []
 
-@IBAction func addNewWeatherItem() {
-    showAlert(
-            title: Spec.newItemAlertTitle,
-            message: Spec.newItemAlertMessage,
-            cancelButton: Spec.newItemAlertCancelButtonTitle,
-            okButton: Spec.newItemAlertOkButtonTitle,
+    @IBAction func addNewWeatherItem() {
+        showAlert(
+            title: Spec.NewItemAlert.title,
+            message: Spec.NewItemAlert.message,
+            cancelButton: Spec.NewItemAlert.CancelButton.title,
+            okButton: Spec.NewItemAlert.OkButton.title,
             okAction: { [weak self] itemTitle in
                 guard let self = self,
                       let itemTitle = itemTitle
@@ -33,19 +41,19 @@ class WeatherViewController: BaseTableViewController {
                     return
                 }
                 
-                self.items.append(WeatherListItem(title: itemTitle))
+                self.items.append(CityItem(title: itemTitle))
                 self.tableView.reloadData()
             },
             hasTextField: true,
-            textFieldPlaceholder: Spec.newItemAlertTextFieldPlaceholder
-            )
-        }
+            textFieldPlaceholder: Spec.NewItemAlert.TextField.placeholder
+        )
+    }
 }
 
     
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
-extension WeatherViewController {
+extension CitiesViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -56,7 +64,7 @@ extension WeatherViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherViewCell.cellIdentifier, for: indexPath) as? WeatherViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: CityTableViewCell.cellIdentifier, for: indexPath) as? CityTableViewCell {
             let item = items[indexPath.row]
             cell.configure(title: item.title)
             return cell

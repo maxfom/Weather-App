@@ -1,5 +1,5 @@
 //
-//  WeatherViewCell.swift
+//  CityTableViewCell.swift
 //  Weather-App
 //
 //  Created by Максим Фомичев on 01.07.2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeatherViewCell: UITableViewCell {
+class CityTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -22,10 +22,10 @@ class WeatherViewCell: UITableViewCell {
     
 }
 
-extension WeatherViewCell {
+extension CityTableViewCell {
     
     static var cellIdentifier: String {
-        return "WeatherViewCell"
+        return "CityTableViewCell"
     }
     
 }
