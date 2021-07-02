@@ -75,8 +75,10 @@ extension CitiesViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         super.tableView(tableView, didSelectRowAt: indexPath)
-        _ = items[indexPath.row]
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        let city = items[indexPath.row].title
+        guard let vc = storyboard?.instantiateViewController(identifier: "WeatherViewController") as? WeatherViewController else { return }
+        vc.configure(city: city)
+        show(vc, sender: self)
     }
     
 }
