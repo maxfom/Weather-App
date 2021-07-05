@@ -27,14 +27,19 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYi-hc-Eaa">
-                                                    <rect key="frame" x="34" y="11" width="398" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYi-hc-Eaa">
+                                                    <rect key="frame" x="20" y="11" width="374" height="21.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="mYi-hc-Eaa" firstAttribute="leading" secondItem="Ysr-Hr-bdg" secondAttribute="leadingMargin" id="5eU-i9-epb"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="mYi-hc-Eaa" secondAttribute="bottom" id="IZ2-BC-BLo"/>
+                                                <constraint firstItem="mYi-hc-Eaa" firstAttribute="top" secondItem="Ysr-Hr-bdg" secondAttribute="topMargin" id="vBL-q1-wWA"/>
+                                                <constraint firstItem="mYi-hc-Eaa" firstAttribute="trailing" secondItem="Ysr-Hr-bdg" secondAttribute="trailingMargin" id="vi3-tf-jGq"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="titleLabel" destination="mYi-hc-Eaa" id="xhL-XN-RtS"/>
@@ -81,20 +86,25 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WeatherResultViewCell" id="0qg-iL-uT7" customClass="WeatherResultViewCell" customModule="Weather_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0qg-iL-uT7" id="U8K-QM-Zeg">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGY-zg-rPB">
-                                                    <rect key="frame" x="41" y="10" width="42" height="22"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGY-zg-rPB">
+                                                    <rect key="frame" x="20" y="11" width="374" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="hGY-zg-rPB" secondAttribute="bottom" id="DPk-Ad-YQs"/>
+                                                <constraint firstItem="hGY-zg-rPB" firstAttribute="leading" secondItem="U8K-QM-Zeg" secondAttribute="leadingMargin" id="S5S-v1-lxC"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="hGY-zg-rPB" secondAttribute="trailing" id="T6k-qy-Nsy"/>
+                                                <constraint firstItem="hGY-zg-rPB" firstAttribute="top" secondItem="U8K-QM-Zeg" secondAttribute="topMargin" id="kLF-X6-u27"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="weatherLabel" destination="hGY-zg-rPB" id="zzp-9p-cim"/>
