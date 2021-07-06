@@ -35,7 +35,7 @@ class WeatherViewController: BaseTableViewController {
     
     func getWeather(city: String, completion: @escaping (WeatherData?) -> Void) {
         do {
-            try weatherService.getWeather(city: city) { [weak self] result in
+            try weatherService.getWeekWeather(city: city) { [weak self] result in
                 switch result {
                 case .success(let weather):
                     completion(weather)

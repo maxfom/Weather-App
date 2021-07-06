@@ -17,16 +17,19 @@ class WeatherService {
         static let host = "api.openweathermap.org"
         static let appId = "1476cbc9d619a63c252081ffbe570446"
         static let units = "metric"
+        static let cnt = "7"
     }
     
     enum Endpoint: String {
         case currentWeather = "/data/2.5/weather"
+        case weekWeather = "/data/2.5/forecast/daily"
     }
     
     func defaultParameters() -> [String: String] {
         [
             "appid": Spec.appId,
-            "units": Spec.units
+            "units": Spec.units,
+            "cnt": Spec.cnt
         ]
     }
     
@@ -55,6 +58,26 @@ class WeatherService {
             case .success(let json):
                 do {
                     let weather = try WeatherParser().parseCurrentWeather(json: json)
+                    completion(.success(weather))
+                } catch {
+                    completion(.failure(error))
+                }
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        return task
+    }
+    
+    
+    @discardableResult
+    func getWeekWeather(city: String, completion: @escaping (Result<WeatherData, Error>) -> Void) throws -> URLSessionDataTask {
+        let task = try sendRequest(endpoint: .weekWeather, parameters: ["q": city]) { result in
+            switch result {
+            case .success(let json):
+                do {
+                    let weather = try WeatherParser().parseWeekWeather(json: json)
                     completion(.success(weather))
                 } catch {
                     completion(.failure(error))
