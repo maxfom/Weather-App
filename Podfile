@@ -8,7 +8,8 @@ target 'Weather-App' do
   # Pods for Weather-App
 
   pod 'SwiftyJSON'
-
+  pod 'RealmSwift'
+  
   target 'Weather-AppTests' do
     inherit! :search_paths
     # Pods for testing

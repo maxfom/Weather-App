@@ -34,20 +34,16 @@ class WeatherViewController: BaseTableViewController {
     }
     
     func getWeather(city: String, completion: @escaping (WeatherData?) -> Void) {
-        do {
-            try weatherService.getWeather(city: city) { [weak self] result in
-                switch result {
-                case .success(let weather):
-                    completion(weather)
-                    
-                case .failure(let error):
-                    completion(nil)
-                    self?.showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
-                }
-            }
-        } catch {
-            showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
-        }
+        weatherService.getWeather(city: city) { [weak self] result in
+           switch result {
+           case .success(let weather):
+               completion(weather)
+               
+           case .failure(let error):
+               completion(nil)
+               self?.showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
+           }
+       }
     }
     
 }

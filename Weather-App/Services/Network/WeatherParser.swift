@@ -31,4 +31,17 @@ class WeatherParser {
         )
     }
     
+    func parseCityFromCurrentWeather(json: JSON, city: String) throws -> CityItem {
+        guard let lng = json["coord"]["lon"].double,
+              let lat = json["coord"]["lat"].double
+        else {
+            throw WeatherParsingError.invalidJSON
+        }
+        return CityItem(
+            title: city,
+            lat: lat,
+            lng: lng
+        )
+    }
+    
 }

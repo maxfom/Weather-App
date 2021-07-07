@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class CitiesViewController: BaseTableViewController {
 
@@ -25,8 +26,9 @@ class CitiesViewController: BaseTableViewController {
             }
         }
     }
-
-    var items: [CityItem] = []
+    
+    var items: Results<CityItem> = RealmService.getCities()
+    private let weatherService = WeatherService()
 
     @IBAction func addNewWeatherItem() {
         showAlert(
@@ -40,14 +42,32 @@ class CitiesViewController: BaseTableViewController {
                 else {
                     return
                 }
-                
-                self.items.append(CityItem(title: itemTitle))
-                self.tableView.reloadData()
+                self.getCity(city: itemTitle) { city in
+                    guard let city = city else { return }
+                    RealmService.saveCity(city: city)
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
             },
             hasTextField: true,
             textFieldPlaceholder: Spec.NewItemAlert.TextField.placeholder
         )
     }
+    
+    func getCity(city: String, completion: @escaping (CityItem?) -> Void) {
+        weatherService.getCity(city: city) { [weak self] result in
+           switch result {
+           case .success(let city):
+               completion(city)
+               
+           case .failure(let error):
+               completion(nil)
+               self?.showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
+           }
+       }
+    }
+    
 }
 
     

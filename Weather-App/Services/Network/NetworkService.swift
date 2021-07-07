@@ -11,7 +11,7 @@ import SwiftyJSON
 class NetworkService {
     
     @discardableResult
-    func sendRequest(request: URLRequest, completion: @escaping (Result<JSON, Error>) -> Void) throws -> URLSessionDataTask {
+    func sendRequest(request: URLRequest, completion: @escaping (Result<JSON, Error>) -> Void) -> URLSessionDataTask {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 let json = JSON(data)

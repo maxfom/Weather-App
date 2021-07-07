@@ -6,13 +6,23 @@
 //
 
 import Foundation
+import RealmSwift
 
-class CityItem {
+class CityItem: Object {
     
-    let title: String
+    @objc dynamic var title: String = ""
+    @objc dynamic var lat: Double = 0
+    @objc dynamic var lng: Double = 0
     
-    init(title: String) {
+    override class func primaryKey() -> String? {
+        return "title"
+    }
+    
+    convenience init(title: String, lat: Double, lng: Double) {
+        self.init()
         self.title = title
+        self.lat = lat
+        self.lng = lng
     }
     
 }

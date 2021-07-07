@@ -24,6 +24,7 @@
 		6D43894357E097E0A04BA483 /* Pods_Weather_App_Weather_AppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902B514816978EAFFEF821ED /* Pods_Weather_App_Weather_AppUITests.framework */; };
 		9B729AE6268EF73100413894 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B729AE5268EF73100413894 /* WeatherViewController.swift */; };
 		9B729AE8268EF99900413894 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B729AE7268EF99900413894 /* WeatherData.swift */; };
+		9B986C5E2695959F00747C44 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B986C5D2695959F00747C44 /* RealmService.swift */; };
 		9BE7A3222692ED03007AF258 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7A3212692ED03007AF258 /* NetworkService.swift */; };
 		9BE7A3242692EE41007AF258 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7A3232692EE41007AF258 /* WeatherService.swift */; };
 		9BE7A3262692F1CB007AF258 /* WeatherParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7A3252692F1CB007AF258 /* WeatherParser.swift */; };
@@ -75,6 +76,7 @@
 		980F5BC50155CE793CE1627D /* Pods-Weather-AppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather-AppTests.release.xcconfig"; path = "Target Support Files/Pods-Weather-AppTests/Pods-Weather-AppTests.release.xcconfig"; sourceTree = "<group>"; };
 		9B729AE5268EF73100413894 /* WeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		9B729AE7268EF99900413894 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
+		9B986C5D2695959F00747C44 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		9BE7A3212692ED03007AF258 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		9BE7A3232692EE41007AF258 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
 		9BE7A3252692F1CB007AF258 /* WeatherParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherParser.swift; sourceTree = "<group>"; };
@@ -204,9 +206,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9B986C5C2695958C00747C44 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				9B986C5D2695959F00747C44 /* RealmService.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
 		9BE7A31F2692ECE9007AF258 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				9B986C5C2695958C00747C44 /* Realm */,
 				9BE7A3202692ECF2007AF258 /* Network */,
 			);
 			path = Services;
@@ -469,6 +480,7 @@
 				50A9EDCC268E44D700F321F1 /* CityItem.swift in Sources */,
 				9BE7A3262692F1CB007AF258 /* WeatherParser.swift in Sources */,
 				50A9EDCE268E463400F321F1 /* CitiesViewController.swift in Sources */,
+				9B986C5E2695959F00747C44 /* RealmService.swift in Sources */,
 				9B729AE6268EF73100413894 /* WeatherViewController.swift in Sources */,
 				50A9ED972689A38100F321F1 /* AppDelegate.swift in Sources */,
 				9B729AE8268EF99900413894 /* WeatherData.swift in Sources */,

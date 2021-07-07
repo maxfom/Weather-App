@@ -31,7 +31,7 @@ class WeatherService {
     }
     
     @discardableResult
-    func sendRequest(endpoint: Endpoint, parameters: [String: String], completion: @escaping (Result<JSON, Error>) -> Void) throws -> URLSessionDataTask {
+    func sendRequest(endpoint: Endpoint, parameters: [String: String], completion: @escaping (Result<JSON, Error>) -> Void) -> URLSessionDataTask? {
         var components = URLComponents()
         components.scheme = Spec.scheme
         components.host = Spec.host
@@ -40,21 +40,43 @@ class WeatherService {
         components.queryItems = parametersDict.map { key, value in
             URLQueryItem(name: key, value: value)
         }
-        guard let url = components.url else { throw WeatherParsingError.invalidURL }
+        guard let url = components.url else {
+            completion(.failure(WeatherParsingError.invalidURL))
+            return nil
+        }
         let request = URLRequest(url: url)
-        let task = try networkService.sendRequest(request: request, completion: completion)
+        let task = networkService.sendRequest(request: request, completion: completion)
         task.resume()
         return task
     }
 
     
     @discardableResult
-    func getWeather(city: String, completion: @escaping (Result<WeatherData, Error>) -> Void) throws -> URLSessionDataTask {
-        let task = try sendRequest(endpoint: .currentWeather, parameters: ["q": city]) { result in
+    func getWeather(city: String, completion: @escaping (Result<WeatherData, Error>) -> Void) -> URLSessionDataTask? {
+        let task = sendRequest(endpoint: .currentWeather, parameters: ["q": city]) { result in
             switch result {
             case .success(let json):
                 do {
                     let weather = try WeatherParser().parseCurrentWeather(json: json)
+                    completion(.success(weather))
+                } catch {
+                    completion(.failure(error))
+                }
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        return task
+    }
+    
+    @discardableResult
+    func getCity(city: String, completion: @escaping (Result<CityItem, Error>) -> Void) -> URLSessionDataTask? {
+        let task = sendRequest(endpoint: .currentWeather, parameters: ["q": city]) { result in
+            switch result {
+            case .success(let json):
+                do {
+                    let weather = try WeatherParser().parseCityFromCurrentWeather(json: json, city: city)
                     completion(.success(weather))
                 } catch {
                     completion(.failure(error))
