@@ -28,8 +28,46 @@ class CitiesViewController: BaseTableViewController {
     }
     
     var items: Results<CityItem> = RealmService.getCities()
+    private var token: NotificationToken?
     private let weatherService = WeatherService()
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        token = items.observe(
+            on: .main,
+            { [weak self] changes in
+                guard let tableView = self?.tableView else { return }
+                switch changes {
+                case .initial:
+                    // Results are now populated and can be accessed without blocking the UI
+                    tableView.reloadData()
+                case .update(_, let deletions, let insertions, let modifications):
+                    // Query results have changed, so apply them to the UITableView
+                    tableView.performBatchUpdates({
+                        // Always apply updates in the following order: deletions, insertions, then modifications.
+                        // Handling insertions before deletions may result in unexpected behavior.
+                        tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
+                                             with: .automatic)
+                        tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                             with: .automatic)
+                        tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
+                                             with: .automatic)
+                    }, completion: { finished in
+                        // ...
+                    })
+                case .error(let error):
+                    // An error occurred while opening the Realm file on the background worker thread
+                    fatalError("\(error)")
+                }
+            }
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        token?.invalidate()
+    }
+    
     @IBAction func addNewWeatherItem() {
         showAlert(
             title: Spec.NewItemAlert.title,
@@ -45,9 +83,6 @@ class CitiesViewController: BaseTableViewController {
                 self.getCity(city: itemTitle) { city in
                     guard let city = city else { return }
                     RealmService.saveCity(city: city)
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
                 }
             },
             hasTextField: true,
@@ -99,6 +134,20 @@ extension CitiesViewController {
         guard let vc = storyboard?.instantiateViewController(identifier: "WeatherViewController") as? WeatherViewController else { return }
         vc.configure(city: city)
         show(vc, sender: self)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            RealmService.removeCity(items[indexPath.row])
+            
+        default:
+            return
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
 }

@@ -6,21 +6,23 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct WeatherData {
+class WeatherData: Object {
 
-    let temp: Float
-    let pressure: Float
-    let humidity: Float
-    let country: String
+    @objc dynamic var temp: Float = 0
+    @objc dynamic var pressure: Float = 0
+    @objc dynamic var humidity: Float = 0
+    @objc dynamic var country: String = ""
     
-    init(
+    convenience init(
         temp: Float,
         pressure: Float,
         humidity: Float,
         country: String
-         )
+    )
     {
+        self.init()
         self.temp = temp
         self.pressure = pressure
         self.humidity = humidity

@@ -7,22 +7,46 @@
 
 import UIKit
 import SwiftyJSON
+import RealmSwift
 
 class WeatherViewController: BaseTableViewController {
 
     private var city: String = ""
-    private var weather: WeatherData?
+    private var weathers: List<WeatherData>?
+    private var token: NotificationToken?
     
     private let weatherService = WeatherService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        getWeather(city: city) { weather in
-            DispatchQueue.main.async { [weak self] in
-                self?.weather = weather
+        weathers = RealmService.getWeathers(for: city)
+//        let cities = RealmService.getCities()
+//        let citiesReference = ThreadSafeReference(to: cities)
+//        DispatchQueue.main.async {
+//            let realm = try? Realm()
+//            let unwrappedCities = realm?.resolve(citiesReference)
+//            print(unwrappedCities?.first?.title ?? "")
+//        }
+
+        getWeather(city: city) { [weak self] weather in
+            guard let self = self, let weather = weather else { return }
+            RealmService.saveWeather([weather], to: self.city)
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        token = weathers?.observe(
+            on: .main,
+            { [weak self] _ in
                 self?.tableView.reloadData()
             }
-        }
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        token?.invalidate()
     }
     
     func configure(city: String) {
@@ -55,7 +79,7 @@ extension WeatherViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if weather == nil {
+        if weathers?.first == nil {
             return 0
         } else {
             return 4
@@ -63,7 +87,7 @@ extension WeatherViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weather = weather else { return UITableViewCell() }
+        guard let weather = weathers?.first else { return UITableViewCell() }
         
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherResultViewCell.cellIdentifier, for: indexPath) as? WeatherResultViewCell {
