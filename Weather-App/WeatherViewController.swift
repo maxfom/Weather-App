@@ -12,36 +12,53 @@ import RealmSwift
 class WeatherViewController: BaseTableViewController {
 
     private var city: String = ""
-    private var weathers: List<WeatherData>?
+    private var weather: WeatherData?
     private var token: NotificationToken?
-    
+    private var forecastToken: NotificationToken?
+    private var forecast: List<WeatherData>?
     private let weatherService = WeatherService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        weathers = RealmService.getWeathers(for: city)
-//        let cities = RealmService.getCities()
-//        let citiesReference = ThreadSafeReference(to: cities)
-//        DispatchQueue.main.async {
-//            let realm = try? Realm()
-//            let unwrappedCities = realm?.resolve(citiesReference)
-//            print(unwrappedCities?.first?.title ?? "")
-//        }
-
-        getWeather(city: city) { [weak self] weather in
-            guard let self = self, let weather = weather else { return }
-            RealmService.saveWeather([weather], to: self.city)
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        token = weathers?.observe(
-            on: .main,
-            { [weak self] _ in
-                self?.tableView.reloadData()
+        weather = RealmService.getWeathers(for: city)
+        forecast = RealmService.getForecast(for: city)
+        let cityObject = try! Realm().object(ofType: CityItem.self, forPrimaryKey: city)
+        token = cityObject?
+            .observe(on: .main) { [weak self] change in
+                switch change {
+                case .change(_, let properties):
+                    for property in properties {
+                        if property.name == "currentWeather" {
+                            self?.weather = property.newValue as? WeatherData
+                            self?.tableView.reloadData()
+                        }
+                    }
+
+                case .deleted:
+                    self?.navigationController?.popViewController(animated: true)
+                    
+                case .error(let error):
+                    print(error.localizedDescription)
+                }
             }
-        )
+        
+        forecastToken = forecast?.observe(on: .main, { [weak self] changes in
+            self?.tableView.reloadData()
+        })
+        
+        getWeather(city: city) { [weak self] weather in
+            guard let self = self, let weather = weather else { return }
+            RealmService.saveWeather(weather, to: self.city)
+        }
+        
+        getForecast(city: city) { [weak self] forecast in
+            guard let self = self, let forecast = forecast else { return }
+            RealmService.saveForecast(forecast, to: self.city)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,7 +81,20 @@ class WeatherViewController: BaseTableViewController {
                completion(weather)
                
            case .failure(let error):
-               completion(nil)
+                completion(nil)
+               self?.showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
+           }
+       }
+    }
+    
+    func getForecast(city: String, completion: @escaping ([WeatherData]?) -> Void) {
+        let cityObject = try! Realm().object(ofType: CityItem.self, forPrimaryKey: city)
+        weatherService.getWeekForecast(lat: cityObject?.lat ?? 0, lng: cityObject?.lng ?? 0) { [weak self] result in
+           switch result {
+           case .success(let forecast):
+                completion(forecast)
+           case .failure(let error):
+                completion(nil)
                self?.showAlert(title: "Error", message: error.localizedDescription, cancelButton: "OK")
            }
        }
@@ -79,7 +109,7 @@ extension WeatherViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if weathers?.first == nil {
+        if weather == nil {
             return 0
         } else {
             return 4
@@ -87,7 +117,7 @@ extension WeatherViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weather = weathers?.first else { return UITableViewCell() }
+        guard let weather = weather else { return UITableViewCell() }
         
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherResultViewCell.cellIdentifier, for: indexPath) as? WeatherResultViewCell {

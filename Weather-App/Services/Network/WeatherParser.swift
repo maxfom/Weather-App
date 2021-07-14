@@ -44,4 +44,21 @@ class WeatherParser {
         )
     }
     
+    func parseWeekForecast(json: JSON) throws -> [WeatherData] {
+        guard let daily = json["daily"].array,
+              let timezone = json["timezone"].string
+        else {
+            throw WeatherParsingError.invalidJSON
+        }
+        
+        return daily.map { weatherJSON in
+            WeatherData(
+                temp: weatherJSON["temp"]["day"].floatValue,
+                pressure: weatherJSON["pressure"].floatValue,
+                humidity: weatherJSON["humidity"].floatValue,
+                country: timezone
+            )
+        }
+    }
+
 }

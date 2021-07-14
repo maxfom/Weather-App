@@ -29,20 +29,34 @@ class RealmService {
         }
     }
     
-    static func saveWeather(_ weathers: [WeatherData], to city: String) {
+    static func saveWeather(_ weather: WeatherData, to city: String) {
         let realm = try! Realm()
         guard let city = realm.object(ofType: CityItem.self, forPrimaryKey: city) else { return }
-        let oldWeather = city.weatherData
         try? realm.write {
-            realm.delete(oldWeather)
-            city.weatherData.append(objectsIn: weathers)
+            city.currentWeather = weather
         }
     }
     
-    static func getWeathers(for city: String) -> List<WeatherData>? {
+    static func getWeathers(for city: String) -> WeatherData? {
         let realm = try! Realm()
         guard let city = realm.object(ofType: CityItem.self, forPrimaryKey: city) else { return nil }
-        return city.weatherData
+        return city.currentWeather
+    }
+    
+    static func saveForecast(_ weathers: [WeatherData], to city: String) {
+        let realm = try! Realm()
+        guard let city = realm.object(ofType: CityItem.self, forPrimaryKey: city) else { return }
+        let oldWeather = city.forecast
+        try? realm.write {
+            realm.delete(oldWeather)
+            city.forecast.append(objectsIn: weathers)
+        }
+    }
+    
+    static func getForecast(for city: String) -> List<WeatherData>? {
+        let realm = try! Realm()
+        guard let city = realm.object(ofType: CityItem.self, forPrimaryKey: city) else { return nil }
+        return city.forecast
     }
     
 }

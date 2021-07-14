@@ -13,7 +13,8 @@ class CityItem: Object {
     @objc dynamic var title: String = ""
     @objc dynamic var lat: Double = 0
     @objc dynamic var lng: Double = 0
-    let weatherData = List<WeatherData>()
+    @objc dynamic var currentWeather: WeatherData?
+    let forecast = List<WeatherData>()
     
     override class func primaryKey() -> String? {
         return "title"
