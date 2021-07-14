@@ -10,7 +10,6 @@ import SwiftyJSON
 import RealmSwift
 
 class WeatherViewController: BaseTableViewController {
-
     private var city: String = ""
     private var weather: WeatherData?
     private var token: NotificationToken?
@@ -104,10 +103,10 @@ class WeatherViewController: BaseTableViewController {
 
 extension WeatherViewController {
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    override  func numberOfSections(in tableView: UITableView) -> Int {
+        return forecast?.count ?? 1
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if weather == nil {
             return 0
@@ -115,16 +114,16 @@ extension WeatherViewController {
             return 4
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weather = weather else { return UITableViewCell() }
-        
+
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherResultViewCell.cellIdentifier, for: indexPath) as? WeatherResultViewCell {
                 switch indexPath.row {
                 case 0:
                     cell.configure(title: "Температура: \(weather.temp) ºC")
-                    
+
                 case 1:
                     cell.configure(title: "Давление: \(weather.pressure)")
 
@@ -133,14 +132,38 @@ extension WeatherViewController {
 
                 case 3:
                     cell.configure(title: "Страна: \(weather.country)")
-                    
+
                 default:
                     break
                 }
                 return cell
             }
         }
-        
+
+        for j in 1...8 {
+        if indexPath.section == j {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherResultViewCell.cellIdentifier, for: indexPath) as? WeatherResultViewCell {
+                guard let forecast = forecast else { return UITableViewCell() }
+                for i in 0..<forecast.count {
+                    let item = forecast[j]
+                switch indexPath.row {
+                case 0:
+                    cell.configure(title: "Температура: \(item.temp) ºC")
+                case 1:
+                    cell.configure(title: "Давление: \(item.pressure)")
+                case 2:
+                    cell.configure(title: "Влажность: \(item.humidity)")
+                case 3:
+                    cell.configure(title: "Страна: \(item.country)")
+                default:
+                    break
+                }
+                return cell
+                }
+            }
+        }
+        }
+
         fatalError("Couldn't find cell's class")
     }
 }
