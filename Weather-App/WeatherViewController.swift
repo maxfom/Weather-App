@@ -139,22 +139,25 @@ extension WeatherViewController {
                 return cell
             }
         }
-
-        for j in 1...8 {
-        if indexPath.section == j {
+        
+        for i in 0...8 {
+        if indexPath.section == i {
             if let cell = tableView.dequeueReusableCell(withIdentifier: WeatherResultViewCell.cellIdentifier, for: indexPath) as? WeatherResultViewCell {
                 guard let forecast = forecast else { return UITableViewCell() }
-                for i in 0..<forecast.count {
-                    let item = forecast[j]
+                    let item = forecast[i]
                 switch indexPath.row {
                 case 0:
                     cell.configure(title: "Температура: \(item.temp) ºC")
+                
                 case 1:
                     cell.configure(title: "Давление: \(item.pressure)")
+                
                 case 2:
                     cell.configure(title: "Влажность: \(item.humidity)")
+                
                 case 3:
                     cell.configure(title: "Страна: \(item.country)")
+                
                 default:
                     break
                 }
@@ -162,8 +165,7 @@ extension WeatherViewController {
                 }
             }
         }
-        }
-
+        
         fatalError("Couldn't find cell's class")
     }
 }
